@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌱 Agri Helper Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #4caf50;
+            --lighter-green: #e8f5e9;
+            --accent-yellow: #ffd54f;
+            --accent-brown: #8d6e63;
+            --accent-blue: #29b6f6;
+            --deep-green: #1b5e20;
+            --gold: #ffb300;
+            --water-blue: #e3f2fd;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--lighter-green) 0%, var(--water-blue) 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+            text-align: center;
+        }
+        
+        /* Leaf Falling Animation */
+        .leaves-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .leaf {
+            position: absolute;
+            top: -50px;
+            font-size: 24px;
+            opacity: 0.7;
+            animation-name: fall;
+            animation-timing-function: linear;
+            animation-iteration-count: infinite;
+        }
+        
+        @keyframes fall {
+            0% {
+                top: -50px;
+                transform: translateX(0) rotate(0deg);
+            }
+            100% {
+                top: 100vh;
+                transform: translateX(100px) rotate(360deg);
+            }
+        }
+        
+        /* Water Ripple Effect */
+        .water-ripple {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .ripple {
+            position: absolute;
+            border: 2px solid rgba(76, 175, 80, 0.3);
+            border-radius: 50%;
+            animation: ripple 6s infinite linear;
+        }
+        
+        @keyframes ripple {
+            0% {
+                width: 0;
+                height: 0;
+                opacity: 1;
+            }
+            100% {
+                width: 500px;
+                height: 500px;
+                opacity: 0;
+            }
+        }
+        
+        .navbar {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 12px 0;
+            background-color: rgba(46, 125, 50, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 3px solid var(--accent-yellow);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .navbar-brand:hover {
+            color: var(--accent-yellow);
+        }
+        
+        .navbar-brand i {
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .navbar-nav {
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+            margin: 0 5px;
+        }
+        
+        .nav-link:hover {
+            color: var(--accent-yellow) !important;
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .hero {
+            margin-top: 60px;
+            text-align: center;
+            padding: 40px 20px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 1.5s ease-out;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-yellow), var(--accent-blue));
+            background-size: 200% 100%;
+            animation: gradientShift 3s infinite alternate;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+        
+        .hero h1 {
+            color: var(--primary-green);
+            margin-bottom: 20px;
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .hero p {
+            color: #555;
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.1rem;
+            color: var(--accent-brown);
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-style: italic;
+        }
+        
+        .feature-btn {
+            margin: 15px;
+            width: 280px;
+            height: 80px;
+            font-size: 18px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: none;
+            position: relative;
+            overflow: hidden;
+            animation: bounceIn 1s ease-out;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-decoration: none;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            70% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .feature-btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: all 0.5s ease;
+        }
+        
+        .feature-btn:hover::before {
+            left: 100%;
+        }
+        
+        .feature-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+        }
+        
+        .feature-btn i {
+            margin-right: 12px;
+            font-size: 24px;
+        }
+        
+        .btn-crop {
+            background: linear-gradient(135deg, var(--primary-green), #388e3c);
+            color: white;
+            animation-delay: 0.2s;
+        }
+        
+        .btn-plant {
+            background: linear-gradient(135deg, var(--accent-blue), #0288d1);
+            color: white;
+            animation-delay: 0.4s;
+        }
+        
+        .btn-fertilizer {
+            background: linear-gradient(135deg, var(--accent-brown), #a1887f);
+            color: white;
+            animation-delay: 0.6s;
+        }
+
+        .btn-price {
+            background: linear-gradient(135deg, #ff9800, #ffb74d);
+            color: white;
+            animation-delay: 0.8s;
+        }
+        
+        .features-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+        
+        .section-title {
+            text-align: center;
+            color: var(--primary-green);
+            margin: 50px 0 30px;
+            font-weight: 700;
+            position: relative;
+            animation: slideInFromLeft 1s ease-out;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        @keyframes slideInFromLeft {
+            from { transform: translateX(-50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--accent-yellow);
+            margin: 10px auto;
+            border-radius: 2px;
+            animation: expandWidth 1.5s ease-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        @keyframes expandWidth {
+            from { width: 0; }
+            to { width: 80px; }
+        }
+        
+        .info-cards {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            width: 300px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-top: 5px solid var(--primary-green);
+            animation: fadeInUp 1s ease-out;
+            opacity: 0;
+            animation-fill-mode: forwards;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .info-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(46,125,50,0.05) 0%, rgba(255,213,79,0.05) 100%);
+            z-index: 0;
+        }
+        
+        .info-card > * {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .info-card:nth-child(1) { animation-delay: 0.2s; }
+        .info-card:nth-child(2) { animation-delay: 0.4s; }
+        .info-card:nth-child(3) { animation-delay: 0.6s; }
+        
+        @keyframes fadeInUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .info-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .info-card i {
+            font-size: 40px;
+            color: var(--primary-green);
+            margin-bottom: 15px;
+            animation: iconFloat 3s infinite ease-in-out;
+        }
+        
+        @keyframes iconFloat {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .info-card h3 {
+            color: var(--primary-green);
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .info-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .footer {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--deep-green) 100%);
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .footer::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--accent-yellow), var(--accent-blue), var(--primary-green));
+            background-size: 200% 100%;
+            animation: gradientShift 3s infinite alternate;
+        }
+        
+        .footer a {
+            color: var(--accent-yellow);
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .testimonials-section {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 50px 20px;
+            margin: 40px auto;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            max-width: 1000px;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary-green);
+            text-align: center;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--deep-green) 100%);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+            border-radius: 15px;
+            margin: 40px auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            max-width: 900px;
+        }
+        
+        .cta-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .cta-description {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-btn {
+            background: var(--accent-yellow);
+            color: var(--deep-green);
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .cta-btn:hover {
+            background: white;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            color: var(--deep-green);
+            text-decoration: none;
+        }
+        
+        .water-wave {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%234caf50"/><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%234caf50"/><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%234caf50"/></svg>');
+            background-size: 1200px 100px;
+            animation: wave 12s linear infinite;
+        }
+        
+        @keyframes wave {
+            0% {
+                background-position-x: 0;
+            }
+            100% {
+                background-position-x: 1200px;
+            }
+        }
+        
+        .water-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        /* Stats Section */
+        .stats-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            margin: 40px auto;
+            max-width: 1000px;
+            animation: fadeIn 1.5s ease-out;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            animation: countUp 2s ease-out;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+        
+        .stat-item:nth-child(1) { animation-delay: 0.2s; }
+        .stat-item:nth-child(2) { animation-delay: 0.4s; }
+        .stat-item:nth-child(3) { animation-delay: 0.6s; }
+        .stat-item:nth-child(4) { animation-delay: 0.8s; }
+        
+        @keyframes countUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 1rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .feature-btn {
+                width: 90%;
+                max-width: 300px;
+            }
+            
+            .info-card {
+                width: 100%;
+                max-width: 350px;
+            }
+            
+            .navbar-nav {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Leaf Falling Animation -->
+    <div class="leaves-container" id="leavesContainer"></div>
+    
+    <!-- Water Ripple Effect -->
+    <div class="water-ripple" id="waterRipple"></div>
+    
+    <!-- Water Wave at Bottom -->
+    <div class="water-container">
+        <div class="water-wave"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-seedling"></i> Agri Helper
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                     <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+                 
+                   
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="container hero">
+        <h1>🌱 Welcome to Agri Helper Dashboard</h1>
+        <p>Your intelligent farming assistant - making agriculture smarter and more productive with AI-powered tools.</p>
+        <p class="hero-subtitle">Empowering farmers with data-driven insights for better crop management and increased yields</p>
+
+        <!-- Feature Buttons -->
+        <div class="features-container">
+            <a href="{{ url_for('crop_predict') }}" class="btn btn-crop feature-btn">
+                <i class="fas fa-wheat-alt"></i> Crop Recommendation
+            </a>
+            <a href="{{ url_for('plant_predict') }}" class="btn btn-plant feature-btn">
+                <i class="fas fa-leaf"></i> Plant Disease Detection
+            </a>
+            <a href="{{ url_for('fertilizer_predict') }}" class="btn btn-fertilizer feature-btn">
+                <i class="fas fa-flask"></i> Fertilizer Recommendation
+            </a>
+            <a href="{{ url_for('price_lookup') }}" class="btn btn-price feature-btn">
+                <i class="fas fa-chart-line"></i> Live Price Lookup
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Section -->
+   
+
+    <!-- Info Cards Section -->
+    <h2 class="section-title">How Agri Helper Works</h2>
+    <div class="container info-cards">
+        <div class="info-card">
+            <i class="fas fa-seedling"></i>
+            <h3>Crop Recommendation</h3>
+            <p>Get AI-powered suggestions for the best crops to plant based on your soil type, climate conditions, and market trends.</p>
+           
+        </div>
+        <div class="info-card">
+            <i class="fas fa-bug"></i>
+            <h3>Disease Detection</h3>
+            <p>Upload images of your plants to identify diseases early and get treatment recommendations to save your crops.</p>
+            
+        </div>
+        <div class="info-card">
+            <i class="fas fa-flask"></i>
+            <h3>Fertilizer Advice</h3>
+            <p>Receive personalized fertilizer recommendations to optimize soil health and maximize your crop yield.</p>
+          
+        </div>
+    </div>
+
+    <!-- Testimonials Section -->
+    <div class="container testimonials-section">
+        <h2 class="section-title">What Farmers Say</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Agri Helper transformed my farming practices. The crop recommendations helped me increase my yield by 35%!"</p>
+                    <p class="testimonial-author">- Rajesh Kumar, Punjab</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"The disease detection feature saved my tomato crop from blight. I caught it early thanks to this tool."</p>
+                    <p class="testimonial-author">- Priya Sharma, Maharashtra</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Fertilizer recommendations helped me reduce costs while improving soil health. Highly recommended!"</p>
+                    <p class="testimonial-author">- Amit Patel, Gujarat</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action Section -->
+    <div class="container cta-section">
+        <h2 class="cta-title">Ready to Transform Your Farming?</h2>
+        <p class="cta-description">Join thousands of farmers who are already using Agri Helper to make informed decisions and maximize their agricultural output.</p>
+        <a href="register.html" class="btn cta-btn">Get Started Today</a>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+  
+            <p>© 2025 Agri Helper - Empowering Farmers with AI Technology</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Create falling leaves
+        function createLeaves() {
+            const leavesContainer = document.getElementById('leavesContainer');
+            const leafIcons = ['🍃', '🌿', '🍂', '🍁', '🌱'];
+            
+            for (let i = 0; i < 15; i++) {
+                const leaf = document.createElement('div');
+                leaf.className = 'leaf';
+                leaf.innerHTML = leafIcons[Math.floor(Math.random() * leafIcons.length)];
+                leaf.style.left = Math.random() * 100 + 'vw';
+                leaf.style.animationDuration = (Math.random() * 10 + 5) + 's';
+                leaf.style.animationDelay = Math.random() * 5 + 's';
+                leavesContainer.appendChild(leaf);
+            }
+        }
+        
+        // Create water ripples
+        function createRipples() {
+            const waterRipple = document.getElementById('waterRipple');
+            
+            setInterval(() => {
+                const ripple = document.createElement('div');
+                ripple.className = 'ripple';
+                ripple.style.left = Math.random() * 100 + 'vw';
+                ripple.style.top = Math.random() * 100 + 'vh';
+                waterRipple.appendChild(ripple);
+                
+                setTimeout(() => {
+                    waterRipple.removeChild(ripple);
+                }, 6000);
+            }, 2000);
+        }
+        
+        // Initialize animations
+        document.addEventListener('DOMContentLoaded', function() {
+            createLeaves();
+            createRipples();
+        });
+    </script>
+</body>
+</html>

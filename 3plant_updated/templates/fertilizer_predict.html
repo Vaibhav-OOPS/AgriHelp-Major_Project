@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌱 Fertilizer Recommendation | AgriVision</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #2e7d32;
+            --light-green: #4caf50;
+            --lighter-green: #e8f5e9;
+            --accent-yellow: #ffd54f;
+            --accent-brown: #8d6e63;
+            --accent-blue: #29b6f6;
+            --dark-text: #2c3e2f;
+            --light-bg: #f9f9f9;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f1f8e9 0%, #e8f5e9 100%);
+            font-family: 'Open Sans', sans-serif;
+            color: var(--dark-text);
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-green), var(--accent-yellow), var(--accent-blue));
+        }
+        
+        h2 {
+            color: var(--primary-green);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h2::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent-yellow);
+            border-radius: 2px;
+        }
+        
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-text);
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+        
+        .form-control {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 0.25rem rgba(46, 125, 50, 0.25);
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-green);
+            font-size: 18px;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--primary-green), #388e3c);
+            border: none;
+            border-radius: 50px;
+            padding: 14px 40px;
+            font-weight: 600;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 0 auto;
+        }
+        
+        .btn-success:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
+        }
+        
+        .result-box {
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            border-left: 5px solid var(--primary-green);
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .result-box h4 {
+            color: var(--primary-green);
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .fertilizer-image {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 15px;
+            transition: transform 0.3s ease;
+            border: 3px solid var(--light-green);
+        }
+        
+        .fertilizer-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .explanation-box {
+            margin-top: 25px;
+            padding: 25px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #e3f2fd 0%, #f0f8ff 100%);
+            border-left: 5px solid var(--accent-blue);
+            animation: slideIn 0.5s ease-out 0.2s both;
+        }
+        
+        .explanation-box h5 {
+            color: var(--accent-blue);
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .explanation-box ul {
+            padding-left: 20px;
+        }
+        
+        .explanation-box li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .alert {
+            border-radius: 12px;
+            border: none;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .alert-danger {
+            background-color: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-green), #388e3c);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 15px 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+        }
+        
+        .soil-crop-section {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffecb3 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 5px solid var(--accent-yellow);
+        }
+        
+        .soil-crop-section h5 {
+            color: var(--accent-brown);
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-section {
+            margin-top: 40px;
+        }
+        
+        .info-section h3 {
+            color: var(--primary-green);
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .info-section h3::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent-yellow);
+            border-radius: 2px;
+        }
+        
+        .info-card {
+            text-align: center;
+            padding: 20px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-card i {
+            font-size: 40px;
+            color: var(--primary-green);
+            margin-bottom: 15px;
+        }
+        
+        .info-card h5 {
+            color: var(--dark-text);
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .info-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px 20px;
+                margin-top: 20px;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+            
+            .btn-success {
+                width: 100%;
+            }
+            
+            .row {
+                margin-bottom: 10px;
+            }
+        }
+        
+        .floating-icon {
+            position: absolute;
+            font-size: 24px;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .floating-icon:nth-child(1) {
+            top: 20px;
+            right: 30px;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floating-icon:nth-child(2) {
+            bottom: 40px;
+            left: 30px;
+            animation: float 8s ease-in-out infinite 1s;
+        }
+        
+        .floating-icon:nth-child(3) {
+            top: 50%;
+            right: 40px;
+            animation: float 7s ease-in-out infinite 0.5s;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0); }
+        }
+        
+        /* Home Button Styles */
+        .home-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: linear-gradient(135deg, var(--primary-green), #388e3c);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 12px 25px;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+        
+        .home-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(46, 125, 50, 0.4);
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .home-button {
+                top: 15px;
+                right: 15px;
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+        
+        .fertilizer-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, var(--accent-brown), #a1887f);
+            color: white;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Button -->
+    <a href="{{ url_for('index') }}" class="home-button">
+        <i class="fas fa-home"></i> Home
+    </a>
+
+    <div class="container">
+        <!-- Floating Icons -->
+        <div class="floating-icon">🌱</div>
+        <div class="floating-icon">🧪</div>
+        <div class="floating-icon">🌾</div>
+        
+        <h2>🌱 Fertilizer Recommendation System</h2>
+
+        <!-- Input Form -->
+        <form method="POST">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-flask"></i> Soil Nutrient Analysis
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Nitrogen (N)</label>
+                            <div class="input-group">
+                                <input type="number" step="any" name="N" class="form-control" required>
+                                <span class="input-icon"><i class="fas fa-atom"></i></span>
+                            </div>
+                            <small class="form-text text-muted">Essential for leaf growth</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Phosphorus (P)</label>
+                            <div class="input-group">
+                                <input type="number" step="any" name="P" class="form-control" required>
+                                <span class="input-icon"><i class="fas fa-fire"></i></span>
+                            </div>
+                            <small class="form-text text-muted">Promotes root development</small>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Potassium (K)</label>
+                            <div class="input-group">
+                                <input type="number" step="any" name="K" class="form-control" required>
+                                <span class="input-icon"><i class="fas fa-bolt"></i></span>
+                            </div>
+                            <small class="form-text text-muted">Improves overall health</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-cloud-sun"></i> Environmental Conditions
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Temperature (°C)</label>
+                            <div class="input-group">
+                                <input type="number" step="any" name="Temperature" class="form-control" required>
+                                <span class="input-icon"><i class="fas fa-thermometer-half"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Humidity (%)</label>
+                            <div class="input-group">
+                                <input type="number" step="any" name="Humidity" class="form-control" required>
+                                <span class="input-icon"><i class="fas fa-tint"></i></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Rainfall (mm)</label>
+                            <div class="input-group">
+                                <input type="number" step="any" name="Rainfall" class="form-control" required>
+                                <span class="input-icon"><i class="fas fa-cloud-rain"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">pH Level</label>
+                            <div class="input-group">
+                                <input type="number" step="any" name="pH" class="form-control" required min="0" max="14">
+                                <span class="input-icon"><i class="fas fa-vial"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="soil-crop-section">
+                <h5><i class="fas fa-seedling"></i> Crop & Soil Information</h5>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Soil Type</label>
+                        <div class="input-group">
+                            <input type="text" name="Soil" class="form-control" placeholder="e.g., Loamy, Sandy, Clay" required>
+                            <span class="input-icon"><i class="fas fa-mountain"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Crop Name</label>
+                        <div class="input-group">
+                            <input type="text" name="Crop" class="form-control" placeholder="e.g., Rice, Wheat, Corn" required>
+                            <span class="input-icon"><i class="fas fa-leaf"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-search"></i> Get Fertilizer Recommendation
+                </button>
+            </div>
+        </form>
+
+        <!-- Prediction Result -->
+        {% if result %}
+        <div class="result-box">
+            <h4>
+                <i class="fas fa-prescription-bottle"></i> Recommended Fertilizer: 
+                <span class="text-success">{{ result }}</span>
+                <span class="fertilizer-badge">Optimal Choice</span>
+            </h4>
+            {% if market_price %}
+            <p class="fw-semibold">
+                <i class="fas fa-rupee-sign me-2"></i>
+                Estimated Retail Price: <span class="text-success">{{ market_price }}</span>
+            </p>
+            {% if price_source %}
+            <p class="text-muted mb-1">
+                <i class="fas fa-satellite-dish me-2"></i>
+                Source: {{ price_source }}
+            </p>
+            {% endif %}
+            {% endif %}
+
+            {% if image_path %}
+            <div class="text-center">
+                <img src="{{ url_for('static', filename='fertilizer_images/' + image_path) }}" alt="Fertilizer Image" class="fertilizer-image">
+            </div>
+            {% else %}
+            <div class="alert alert-danger mt-3">
+                <i class="fas fa-exclamation-triangle me-2"></i> Fertilizer image not found.
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="explanation-box">
+            <h5><i class="fas fa-lightbulb"></i> Why this fertilizer?</h5>
+            <ul>
+                {% for line in explanation_text %}
+                <li>{{ line }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Information Section -->
+        <div class="info-section">
+            <h3>Understanding Fertilizer Types</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <i class="fas fa-atom"></i>
+                        <h5>Nitrogen-Based</h5>
+                        <p>Promotes leaf growth and green color. Essential for vegetative growth stages.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <i class="fas fa-fire"></i>
+                        <h5>Phosphorus-Based</h5>
+                        <p>Stimulates root development and flowering. Crucial for energy transfer.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="info-card">
+                        <i class="fas fa-bolt"></i>
+                        <h5>Potassium-Based</h5>
+                        <p>Improves disease resistance and water regulation. Enhances fruit quality.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Add animation to form elements when they come into view
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputs = document.querySelectorAll('.form-control');
+            
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (this.value === '') {
+                        this.parentElement.classList.remove('focused');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
